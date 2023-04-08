@@ -21,7 +21,7 @@ void interface_1() {
               Text("A lista a seguir não está em ordem da mais usada para a menos usada.",
                     style: TextStyle(fontStyle: FontStyle.italic)
                   ),
-              SizedBox(height: 10), // adiciona um espaçamento vertical de 14px
+              SizedBox(height: 10), // adiciona um espaçamento vertical de 10px
               Text("1. Python", style: TextStyle(fontSize: 16)),
               Text("2. C#", style: TextStyle(fontSize: 16)),
               Text("3. C++", style: TextStyle(fontSize: 16)),

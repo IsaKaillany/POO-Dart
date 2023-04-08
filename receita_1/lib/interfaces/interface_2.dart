@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-TextStyle firstLine = TextStyle(
+TextStyle _firstLine = TextStyle(
   fontWeight: FontWeight.bold, 
   fontSize: 15
 );
@@ -27,10 +27,10 @@ void interface_2() {
               border: TableBorder.all(color: Color(0xff4b0082), width: 2),
                 // showBottomBorder: true,
               columns: [
-                DataColumn(label: Text("Nome", style: firstLine)),
-                DataColumn(label: Text("Estilo", style: firstLine)),
-                DataColumn(label: Text("IBU", style: firstLine)),
-                DataColumn(label: Text("País de origem", style: firstLine))
+                DataColumn(label: Text("Nome", style: _firstLine)),
+                DataColumn(label: Text("Estilo", style: _firstLine)),
+                DataColumn(label: Text("IBU", style: _firstLine)),
+                DataColumn(label: Text("País de origem", style: _firstLine))
               ],
               rows: [
                 DataRow(cells: [

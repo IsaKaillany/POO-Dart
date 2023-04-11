@@ -8,9 +8,9 @@ TextStyle _firstLine = TextStyle(
 void interface_2() {
   MaterialApp app = MaterialApp(
     theme: ThemeData(
-      primarySwatch: Colors.indigo //padrão de cores que será usada
+      primarySwatch: Colors.indigo 
     ),
-    home: Scaffold( //objeto gráfico estruturado para ser uma tela de app
+    home: Scaffold( 
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.local_bar_rounded),
@@ -27,7 +27,6 @@ void interface_2() {
               child: 
                 DataTable(
                   border: TableBorder.all(color: Color(0xff4b0082), width: 2),
-                    // showBottomBorder: true,
                   columns: [
                     DataColumn(label: Text("Nome", style: _firstLine)),
                     DataColumn(label: Text("Estilo", style: _firstLine)),

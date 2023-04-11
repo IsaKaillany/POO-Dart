@@ -64,8 +64,7 @@ class MyApp extends StatelessWidget {
 
     @override
     Widget build(BuildContext context) {
-        MaterialApp app;
-        return app = MaterialApp(
+        return MaterialApp(
             theme: ThemeData(primarySwatch: Colors.deepPurple),
             home: Scaffold(
                 appBar: CustomAppBar(),
@@ -77,6 +76,5 @@ class MyApp extends StatelessWidget {
 
 void main() {
     MyApp app = MyApp();
-
     runApp(app);
 }

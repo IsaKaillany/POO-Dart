@@ -18,7 +18,7 @@ class CustomNavBar extends StatelessWidget { //transforma a class em um Widget a
                 label: "Cervejas",
                 icon: Icon(Icons.local_drink_outlined)
             ),
-                        BottomNavigationBarItem(
+            BottomNavigationBarItem(
                 label: "Nações",
                 icon: Icon(Icons.flag_outlined)
             )

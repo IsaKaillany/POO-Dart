@@ -14,6 +14,29 @@ class MyApp extends StatelessWidget {
             home: Scaffold(
                 appBar: AppBar(
                     title: const Text("Gabriel lindo"),
+                    actions: [
+                        PopupMenuButton<Color>(
+                            onSelected: (Color color) {
+                                //Lógica para lidar com a seleção da cor
+                            },
+                            itemBuilder: (BuildContext context) { //define os itens do menu
+                                return [
+                                    PopupMenuItem<Color>(
+                                        value: Colors.red,
+                                        child: Text("Red"),
+                                    ),
+                                    PopupMenuItem<Color>(
+                                        value: Colors.blue,
+                                        child: Text("Blue"),
+                                    ),
+                                    PopupMenuItem<Color>(
+                                        value: Colors.green,
+                                        child: Text("Green"),
+                                    ),
+                                ];
+                            }
+                        )
+                    ]
                 ),
                 body: DataBodyWidget(objects: [
                     "La Fin Du Monde - Bock - 65 ibu",

@@ -33,7 +33,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget{ //per
     @override
     Widget build(BuildContext context) {
         return AppBar(
-            title: const Text("Gabriel lindo"),
+            title: const Text("Dicas"),
             actions: [
                 PopupMenuButton<Color>(
                     onSelected: (Color color) {

@@ -164,3 +164,30 @@ class DataBodyWidget extends StatelessWidget {
             ).toList());
     }
 }
+
+class MyTileWidget extends StatelessWidget {
+    List<Map<String,dynamic>> objects;
+    MyTileWidget({this.objects = const []});
+
+    @override
+    Widget build(BuildContext context) {
+        var columnNames = ["Nome", "Estilo", "IBU"],
+            propertyNames = ["name", "style", "ibu"];
+
+        return DataTable(
+            columns: columnNames.map(
+                (name) => DataColumn(
+                    label: Expanded(
+                        child: Text(name, style: TextStyle(fontWeight: FontWeight.bold))
+                    )
+                )
+            ).toList(),
+            rows: objects.map(
+                (obj) => DataRow(
+                    cells: propertyNames.map(
+                        (propName) => DataCell(Text(obj[propName]))
+                    ).toList()
+                )
+            ).toList());
+    }
+}

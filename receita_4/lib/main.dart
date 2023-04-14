@@ -84,6 +84,7 @@ var dataObjects = [
 ];
 void main() {
   MyApp app = MyApp();
+//   ModifiedApp app = ModifiedApp();
 
   runApp(app);
 }
@@ -99,14 +100,31 @@ class MyApp extends StatelessWidget {
                     title: const Text("Dicas"),
                 ),
                 body: Center(
-                    // child: 
-                        // SingleChildScrollView(
-                            // scrollDirection: Axis.vertical,
-                            // child: DataBodyWidget(objects: dataObjects)
-                            child: MyTileWidget(objects: dataObjects)
-                        // )
+                    child: 
+                        SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            child: DataBodyWidget(objects: dataObjects)
+                        )
+                ),                
+                bottomNavigationBar: NewNavBar(),
+            )
+        );
+    }
+}
+
+class ModifiedApp extends StatelessWidget {
+    @override
+    Widget build(BuildContext context) {
+        return MaterialApp(
+            theme: ThemeData(primarySwatch: Colors.lightBlue),
+            debugShowCheckedModeBanner: false,
+            home: Scaffold(
+                appBar: AppBar(
+                    title: const Text("Dicas"),
                 ),
-                
+                body: Center(
+                    child: MyTileWidget(objects: dataObjects)
+                ),                
                 bottomNavigationBar: NewNavBar(),
             )
         );

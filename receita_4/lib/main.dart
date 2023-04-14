@@ -165,7 +165,7 @@ class DataBodyWidget extends StatelessWidget {
     }
 }
 
-class MyTileWidget extends StatelessWidget { //teste
+class MyTileWidget extends StatelessWidget {
     List<Map<String,dynamic>> objects;
     MyTileWidget({this.objects = const []});
 

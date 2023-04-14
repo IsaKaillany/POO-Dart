@@ -92,18 +92,19 @@ class MyApp extends StatelessWidget {
     @override
     Widget build(BuildContext context) {
         return MaterialApp(
-            theme: ThemeData(primarySwatch: Colors.deepPurple),
+            theme: ThemeData(primarySwatch: Colors.lightBlue),
             debugShowCheckedModeBanner: false,
             home: Scaffold(
                 appBar: AppBar(
                     title: const Text("Dicas"),
                 ),
                 body: Center(
-                    child: 
-                        SingleChildScrollView(
-                            scrollDirection: Axis.vertical,
-                            child: DataBodyWidget(objects: dataObjects)
-                        )
+                    // child: 
+                        // SingleChildScrollView(
+                            // scrollDirection: Axis.vertical,
+                            // child: DataBodyWidget(objects: dataObjects)
+                            child: MyTileWidget(objects: dataObjects)
+                        // )
                 ),
                 
                 bottomNavigationBar: NewNavBar(),
@@ -166,28 +167,23 @@ class DataBodyWidget extends StatelessWidget {
 }
 
 class MyTileWidget extends StatelessWidget {
-    List<Map<String,dynamic>> objects;
-    MyTileWidget({this.objects = const []});
+    List<Map<String, String>> objects;
+    MyTileWidget( {this.objects = const [] });
 
     @override
-    Widget build(BuildContext context) {
-        var columnNames = ["Nome", "Estilo", "IBU"],
-            propertyNames = ["name", "style", "ibu"];
-
-        return DataTable(
-            columns: columnNames.map(
-                (name) => DataColumn(
-                    label: Expanded(
-                        child: Text(name, style: TextStyle(fontWeight: FontWeight.bold))
-                    )
-                )
-            ).toList(),
-            rows: objects.map(
-                (obj) => DataRow(
-                    cells: propertyNames.map(
-                        (propName) => DataCell(Text(obj[propName]))
-                    ).toList()
-                )
-            ).toList());
+    Widget build(BuildContext context) {        
+        return ListView.builder(
+            itemCount: objects.length,
+            itemBuilder: (context, index) {
+                final obj = objects[index];                
+                return ListTile(
+                    // isThreeLine: true,
+                    title: Text(obj["name"]!),
+                    subtitle: Text('''Estilo: ${obj["style"]}
+IBU: ${obj["ibu"]}'''),             
+                    leading: Icon(Icons.local_drink),         
+                );
+            },
+        );
     }
 }

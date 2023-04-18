@@ -82,6 +82,25 @@ var dataObjects = [
         "ibu": "30"
     },
 ];
+
+var dataObjects_2 = [
+    {
+        "day": "25",
+        "month": "06",
+        "year": "2003"
+    },  
+    {
+        "day": "23",
+        "month": "07",
+        "year": "1981"
+    },
+    {
+        "day": "11",
+        "month": "03",
+        "year": "1977"
+    },
+];
+
 void main() {
   MyApp app = MyApp();
 //   ModifiedApp app = ModifiedApp();
@@ -103,7 +122,7 @@ class MyApp extends StatelessWidget {
                     child: 
                         SingleChildScrollView(
                             scrollDirection: Axis.vertical,
-                            child: DataBodyWidget(objects: dataObjects)
+                            child: DataBodyWidget(objects: dataObjects_2, columnNames: ["Dia", "Mês", "Ano"], propertyNames: ["day", "month", "year"])
                         )
                 ),                
                 bottomNavigationBar: NewNavBar(),
@@ -159,12 +178,14 @@ class NewNavBar extends StatelessWidget {
 
 class DataBodyWidget extends StatelessWidget {
     List<Map<String,dynamic>> objects;
-    DataBodyWidget({this.objects = const []});
+    List<String> columnNames;
+    List<String> propertyNames;
+    DataBodyWidget({this.objects = const [], this.columnNames = const [], this.propertyNames = const []});
 
     @override
     Widget build(BuildContext context) {
-        var columnNames = ["Nome", "Estilo", "IBU"],
-            propertyNames = ["name", "style", "ibu"];
+        // var columnNames = ["Nome", "Estilo", "IBU"],
+        // var   propertyNames = ["name", "style", "ibu"];
 
         return DataTable(
             columns: columnNames.map(

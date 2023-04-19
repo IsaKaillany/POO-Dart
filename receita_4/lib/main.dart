@@ -83,24 +83,6 @@ var dataObjects = [
     },
 ];
 
-var dataObjects_2 = [
-    {
-        "day": "25",
-        "month": "06",
-        "year": "2003"
-    },  
-    {
-        "day": "23",
-        "month": "07",
-        "year": "1981"
-    },
-    {
-        "day": "11",
-        "month": "03",
-        "year": "1977"
-    },
-];
-
 void main() {
   MyApp app = MyApp();
 //   ModifiedApp app = ModifiedApp();
@@ -116,13 +98,13 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             home: Scaffold(
                 appBar: AppBar(
-                    title: const Text("Dicas"),
+                    title: const Text("Cervejas"),
                 ),
                 body: Center(
                     child: 
                         SingleChildScrollView(
                             scrollDirection: Axis.vertical,
-                            child: DataBodyWidget(objects: dataObjects_2, columnNames: ["Dia", "Mês", "Ano"], propertyNames: ["day", "month", "year"])
+                            child: DataBodyWidget(objects: dataObjects, columnNames: ["Nome", "Estilo", "IBU"], propertyNames: ["name", "style", "ibu"])
                         )
                 ),                
                 bottomNavigationBar: NewNavBar(),

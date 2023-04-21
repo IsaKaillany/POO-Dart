@@ -84,8 +84,8 @@ var dataObjects = [
 ];
 
 void main() {
-  MyApp app = MyApp();
-//   ModifiedApp app = ModifiedApp();
+//   MyApp app = MyApp();
+  ModifiedApp app = ModifiedApp();
 
   runApp(app);
 }
@@ -166,9 +166,6 @@ class DataBodyWidget extends StatelessWidget {
 
     @override
     Widget build(BuildContext context) {
-        // var columnNames = ["Nome", "Estilo", "IBU"],
-        // var   propertyNames = ["name", "style", "ibu"];
-
         return DataTable(
             columns: columnNames.map(
                 (name) => DataColumn(
@@ -200,9 +197,14 @@ class MyTileWidget extends StatelessWidget {
                 return ListTile(
                     // isThreeLine: true,
                     title: Text(obj["name"]!),
-                    subtitle: Text('''Estilo: ${obj["style"]}
-IBU: ${obj["ibu"]}'''),             
-                    leading: Icon(Icons.local_drink),         
+                    subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                            Text("Estilo: ${obj["style"]}"),
+                            Text("IBU: ${obj["ibu"]}")
+                        ]
+                    ),
+                    leading: Icon(Icons.local_drink)      
                 );
             },
         );

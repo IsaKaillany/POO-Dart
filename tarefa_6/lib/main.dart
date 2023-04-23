@@ -59,18 +59,6 @@ class _MyFormState extends State<MyForm> {
                                 return null;
                             },
                         ),
-                        TextFormField(
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                                labelText: "Telefone",
-                            ),
-                            validator: (value) {
-                                if (value!.isEmpty) {
-                                    return "Por favor, digite seu telefone";
-                                }
-                                return null;
-                            },
-                        ),
                         SizedBox(height: 15),
                         Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

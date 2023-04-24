@@ -88,7 +88,6 @@ class _MyFormState extends State<MyForm> {
                                         ),
                                         RadioListTile<String>(
                                             title: Text("Brasileira"),
-                                            contentPadding: EdgeInsetsDirectional.zero,
                                             value: "br",
                                             groupValue: _nacionality,
                                             onChanged: (value) {
@@ -99,7 +98,6 @@ class _MyFormState extends State<MyForm> {
                                         ),
                                         RadioListTile<String>(
                                             title: Text("Estrangeiro"),
-                                            contentPadding: EdgeInsetsDirectional.zero,
                                             value: "es",
                                             groupValue: _nacionality,
                                             onChanged: (value) {

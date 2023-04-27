@@ -11,6 +11,7 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    print("no build da classe MyApp");
     return MaterialApp(
       theme: ThemeData(primarySwatch: Colors.deepPurple),
       debugShowCheckedModeBanner: false,
@@ -25,18 +26,18 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class NewNavBar extends StatelessWidget {
+class NewNavBar extends HookWidget { //é passível de ter um estado
   NewNavBar();
-
-  void buttonTapped(int index) {
-    print("Tocaram no botão $index");
-  }
 
   @override
   Widget build(BuildContext context) {
+    print("no build da classe NewNavBar");
+    var state = useState(0);
     return BottomNavigationBar(
-      onTap: buttonTapped,
-      currentIndex: 1,
+      onTap: (index) {
+        state.value = index;
+      },
+      currentIndex: state.value,
       items: const [
         BottomNavigationBarItem(
           label: "Cafés",
@@ -61,6 +62,7 @@ class DataTableWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("no build da classe DataTableWidget");
     var columnNames = ["Nome", "Estilo", "IBU"],
         propertyNames = ["name", "style", "ibu"];
 

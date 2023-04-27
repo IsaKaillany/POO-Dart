@@ -11,16 +11,16 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print("no build da classe MyApp");
+    // print("no build da classe MyApp");
     return MaterialApp(
-      theme: ThemeData(primarySwatch: Colors.deepPurple),
+      theme: ThemeData(primarySwatch: Colors.blueGrey),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
           title: const Text("Dicas"),
         ),
         body: DataTableWidget(jsonObjects: dataObjects),
-        bottomNavigationBar: NewNavBar(),
+        bottomNavigationBar: MyStatefulWidget(),
       )
     );
   }
@@ -56,13 +56,55 @@ class NewNavBar extends HookWidget { //é passível de ter um estado
   }
 }
 
+class MyStatefulWidget extends StatefulWidget {
+  const MyStatefulWidget({super.key});
+
+  @override
+  State<MyStatefulWidget> createState() => NewNavBar2();
+}
+
+class NewNavBar2 extends State<MyStatefulWidget> { //é passível de ter um estado
+  NewNavBar2();
+
+  int _selectIndex = 0;
+
+  void onItemTapped(int index) {
+    setState(() {
+      _selectIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomNavigationBar(
+      currentIndex: _selectIndex,
+      onTap: onItemTapped,
+      selectedItemColor: Colors.teal,
+      items: const [
+        BottomNavigationBarItem(
+          label: "Cafés",
+          icon: Icon(Icons.coffee_outlined),
+        ),
+        BottomNavigationBarItem(
+          label: "Cervejas", 
+          icon: Icon(Icons.local_drink_outlined)
+        ),
+        BottomNavigationBarItem(
+          label: "Nações", 
+          icon: Icon(Icons.flag_outlined)
+        )
+      ]
+    );
+  }
+}
+
 class DataTableWidget extends StatelessWidget {
   final List jsonObjects;
   DataTableWidget({this.jsonObjects = const []});
 
   @override
   Widget build(BuildContext context) {
-    print("no build da classe DataTableWidget");
+    // print("no build da classe DataTableWidget");
     var columnNames = ["Nome", "Estilo", "IBU"],
         propertyNames = ["name", "style", "ibu"];
 

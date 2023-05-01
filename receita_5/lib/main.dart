@@ -11,7 +11,7 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // print("no build da classe MyApp");
+    print("no build da classe MyApp");
     return MaterialApp(
       theme: ThemeData(primarySwatch: Colors.blueGrey),
       debugShowCheckedModeBanner: false,
@@ -76,6 +76,7 @@ class NewNavBar2 extends State<MyStatefulWidget> { //é passível de ter um esta
 
   @override
   Widget build(BuildContext context) {
+    print("no build da classe NewNavBar2");
     return BottomNavigationBar(
       currentIndex: _selectIndex,
       onTap: onItemTapped,
@@ -104,7 +105,7 @@ class DataTableWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print("no build da classe DataTableWidget");
+    print("no build da classe DataTableWidget");
     var columnNames = ["Nome", "Estilo", "IBU"],
         propertyNames = ["name", "style", "ibu"];
 

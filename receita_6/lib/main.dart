@@ -5,7 +5,29 @@ class DataService {
   final ValueNotifier<List> tableStateNotifier = ValueNotifier([]);
 
   void carregar(index){
-    if (index == 1) carregarCervejas();
+    if (index == 0) carregarCafes();
+    else if (index == 1) carregarCervejas();
+    else carregarNacoes();
+  }
+
+  void carregarCafes(){
+    tableStateNotifier.value = [
+      {
+      "name": "Espresso",
+      "style": "Forte",
+      "ibu": "-"
+      },
+      {
+      "name": "Americano",
+      "style": "Suave",
+      "ibu": "-"
+      },
+      {
+      "name": "Mocha", 
+      "style": "Doce", 
+      "ibu": "-"
+      }
+    ];
   }
 
   void carregarCervejas(){
@@ -24,6 +46,26 @@ class DataService {
       "name": "Duvel", 
       "style": "Pilsner", 
       "ibu": "82"
+      }
+    ];
+  }
+
+  void carregarNacoes(){
+    tableStateNotifier.value = [
+      {
+      "name": "Brasil",
+      "style": "America Latina",
+      "ibu": "-"
+      },
+      {
+      "name": "China",
+      "style": "Ásia",
+      "ibu": "-"
+      },
+      {
+      "name": "França", 
+      "style": "Europa", 
+      "ibu": "-"
       }
     ];
   }
@@ -75,7 +117,6 @@ class NewNavBar extends HookWidget {
       onTap: (index) {
         state.value = index;
         itemSelectedCallback(index);
-        // carregarCervejas();
       },
       currentIndex: state.value,
       items: const [
@@ -103,8 +144,8 @@ class DataTableWidget extends StatelessWidget {
 
   DataTableWidget(
     {this.jsonObjects = const [],
-    this.columnNames = const ["Nome", "Estilo", "IBU"],
-    this.propertyNames = const ["name", "style", "ibu"]});
+    this.columnNames = const [],
+    this.propertyNames = const []});
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +153,7 @@ class DataTableWidget extends StatelessWidget {
       columns: columnNames.map(
         (name) => DataColumn(
           label: Expanded(
-            child: Text(name, style: TextStyle(fontStyle: FontStyle.italic))
+            child: Text(name, style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold))
           )
         )
       ).toList(),

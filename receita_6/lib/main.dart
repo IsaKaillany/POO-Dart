@@ -1,79 +1,68 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+import "package:flutter/material.dart";
+import "package:flutter_hooks/flutter_hooks.dart";
 
 class DataService {
   final ValueNotifier<List> tableStateNotifier = ValueNotifier([]);
-  /* final List<Function()> funcoes = [carregarCafes, carregarCervejas, carregarNacoes];
 
-  void carregar(index){
-    funcoes[index]();
-  } */
-
-  void carregar(index){
-    if (index == 0) carregarCafes();
-    else if (index == 1) carregarCervejas();
-    else carregarNacoes();
+  void carregar(int index){
+    tableStateNotifier.value = _json[index] ?? [];
   }
 
-  void carregarCafes(){
-    tableStateNotifier.value = [
+  final Map<int, List<Map<String, String>>> _json = {
+    0: [
       {
-      "name": "Espresso",
-      "style": "Forte",
-      "ibu": "-"
+        "name": "The Captain's Bean",
+        "origin": "Lintong, Sumatra",
+        "intensifier": "Fresco"
       },
       {
-      "name": "Americano",
-      "style": "Suave",
-      "ibu": "-"
+        "name": "Strong Been",
+        "origin": "Nayarit, Mexico",
+        "intensifier": "Azedo"
       },
       {
-      "name": "Mocha", 
-      "style": "Doce", 
-      "ibu": "-"
+        "name": "Red Java", 
+        "origin": "Tolima, Colombia", 
+        "intensifier": "Suave"
       }
-    ];
-  }
-
-  void carregarCervejas(){
-    tableStateNotifier.value = [
+    ],
+    
+    1: [
       {
-      "name": "La Fin Du Monde",
-      "style": "Bock",
-      "ibu": "65"
+        "name": "La Fin Du Monde",
+        "style": "Bock",
+        "ibu": "65"
       },
       {
-      "name": "Sapporo Premiume",
-      "style": "Sour Ale",
-      "ibu": "54"
+        "name": "Sapporo Premiume",
+        "style": "Sour Ale",
+        "ibu": "54"
       },
       {
-      "name": "Duvel", 
-      "style": "Pilsner", 
-      "ibu": "82"
+        "name": "Duvel", 
+        "style": "Pilsner", 
+        "ibu": "82"
       }
-    ];
-  }
+    ],
 
-  void carregarNacoes(){
-    tableStateNotifier.value = [
+    2: [
       {
-      "name": "Brasil",
-      "style": "America Latina",
-      "ibu": "-"
+        "name": "Brasil",
+        "continent": "America Latina",
+        "population": "213,4 milhões"
       },
       {
-      "name": "China",
-      "style": "Ásia",
-      "ibu": "-"
+        "name": "China",
+        "continent": "Ásia",
+        "population": "1,4 bilhão"
       },
       {
-      "name": "França", 
-      "style": "Europa", 
-      "ibu": "-"
+        "name": "França", 
+        "continent": "Europa", 
+        "population": "67,4 milhões"
       }
-    ];
-  }
+    ],
+  };
 }
 final dataService = DataService();
 
@@ -82,11 +71,56 @@ void main() {
   runApp(app);
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget { 
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  int _selectedIndex = 0;
+
+  static const List<Map<String, dynamic>> _itemsNavBar = [
+    {
+      "label": "Cafés",
+      "icon": Icon(Icons.coffee_outlined),
+      "columnNames": ["Nome", "Origem", "Intensidade"],
+      "propertyNames": ["name", "origin", "intensifier"],
+    },
+    
+    {
+      "label": "Cervejas",
+      "icon": Icon(Icons.local_drink_outlined),
+      "columnNames": ["Nome", "Estilo", "IBU"],
+      "propertyNames": ["name", "style", "ibu"],
+    },
+    
+    {
+      "label": "Nações",
+      "icon": Icon(Icons.flag_outlined),
+      "columnNames": ["Nome", "Continente", "População"],
+      "propertyNames": ["name", "continent", "population"],
+    },
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    dataService.carregar(_selectedIndex);
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      dataService.carregar(_selectedIndex);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final itemsNavBar = _itemsNavBar[_selectedIndex];
+
     return MaterialApp(
-      theme: ThemeData(primarySwatch: Colors.deepPurple),
+      theme: ThemeData(primarySwatch: Colors.teal),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
@@ -94,26 +128,34 @@ class MyApp extends StatelessWidget {
         ),
         body: ValueListenableBuilder(
           valueListenable: dataService.tableStateNotifier,
-          builder:(_, value, __){
+          builder:(context, value, child){
             return DataTableWidget(
               jsonObjects: value, 
-              propertyNames: ["name","style","ibu"], 
-              columnNames: ["Nome", "Estilo", "IBU"]
+              columnNames: itemsNavBar["columnNames"],
+              propertyNames: itemsNavBar["propertyNames"]
             );
           }
         ),
-        bottomNavigationBar: NewNavBar(itemSelectedCallback: dataService.carregar),
+        bottomNavigationBar: BottomNavigationBar(
+          items: [
+            for (var item in _itemsNavBar)
+              BottomNavigationBarItem(
+                label: item["label"],
+                icon: item["icon"],
+              ),
+          ],
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+        ),
       )
     );
   }
 }
 
 class NewNavBar extends HookWidget {
-  var itemSelectedCallback; //esse atributo será uma função
+  final void Function(int)? itemSelectedCallback; 
 
-  NewNavBar({this.itemSelectedCallback}){
-    itemSelectedCallback ??= (_){} ; // o mesmo que: if (itemSelectedCallback == null) itemSelectedCallback = (){};
-  } 
+  NewNavBar({this.itemSelectedCallback});
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +163,7 @@ class NewNavBar extends HookWidget {
     return BottomNavigationBar(
       onTap: (index) {
         state.value = index;
-        itemSelectedCallback(index);
+        itemSelectedCallback?.call(index);
       },
       currentIndex: state.value,
       items: const [
@@ -165,7 +207,7 @@ class DataTableWidget extends StatelessWidget {
       rows: jsonObjects.map(
         (obj) => DataRow(
           cells: propertyNames.map(
-            (propName) => DataCell(Text(obj[propName]))
+            (propName) => DataCell(Text(obj[propName] ?? ""))
           ).toList()
         )
       ).toList()

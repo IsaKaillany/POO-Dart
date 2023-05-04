@@ -4,12 +4,13 @@ import "package:flutter_hooks/flutter_hooks.dart";
 class DataService {
   final ValueNotifier<List> tableStateNotifier = ValueNotifier([]);
 
-  void carregar(int index){
-    tableStateNotifier.value = _json[index] ?? [];
-  }
+  void carregar(index){
+    final funcoes = [carregarCafes, carregarCervejas, carregarNacoes];
+    funcoes[index]();
+  } 
 
-  final Map<int, List<Map<String, String>>> _json = {
-    0: [
+  void carregarCafes(){
+    tableStateNotifier.value = [
       {
         "name": "The Captain's Bean",
         "origin": "Lintong, Sumatra",
@@ -25,9 +26,11 @@ class DataService {
         "origin": "Tolima, Colombia", 
         "intensifier": "Suave"
       }
-    ],
-    
-    1: [
+    ];
+  }
+
+  void carregarCervejas(){
+    tableStateNotifier.value = [
       {
         "name": "La Fin Du Monde",
         "style": "Bock",
@@ -43,9 +46,11 @@ class DataService {
         "style": "Pilsner", 
         "ibu": "82"
       }
-    ],
+    ];
+  }
 
-    2: [
+  void carregarNacoes(){
+    tableStateNotifier.value = [
       {
         "name": "Brasil",
         "continent": "America Latina",
@@ -61,8 +66,8 @@ class DataService {
         "continent": "Europa", 
         "population": "67,4 milhões"
       }
-    ],
-  };
+    ];
+  }
 }
 final dataService = DataService();
 

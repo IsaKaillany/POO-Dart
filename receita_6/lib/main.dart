@@ -4,12 +4,12 @@ import "package:flutter_hooks/flutter_hooks.dart";
 class DataService {
   final ValueNotifier<List> tableStateNotifier = ValueNotifier([]);
 
-  void carregar(index){
+  void carregar(index) {
     final funcoes = [carregarCafes, carregarCervejas, carregarNacoes];
     funcoes[index]();
   } 
 
-  void carregarCafes(){
+  void carregarCafes() {
     tableStateNotifier.value = [
       {
         "name": "The Captain's Bean",
@@ -29,7 +29,7 @@ class DataService {
     ];
   }
 
-  void carregarCervejas(){
+  void carregarCervejas() {
     tableStateNotifier.value = [
       {
         "name": "La Fin Du Monde",
@@ -49,7 +49,7 @@ class DataService {
     ];
   }
 
-  void carregarNacoes(){
+  void carregarNacoes() {
     tableStateNotifier.value = [
       {
         "name": "Brasil",

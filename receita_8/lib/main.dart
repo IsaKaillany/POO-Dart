@@ -19,12 +19,22 @@ class DataService {
     funcoes[index]();
   }
 
-  void carregarCafes() {
-    return;
-  }
+  void carregarCafes() async {
+    var coffeesUri = Uri(
+      scheme: 'https',
+      host: 'random-data-api.com',
+      path: 'api/coffee/random_coffee',
+      queryParameters: {'size': '5'}); 
 
-  void carregarNacoes() {
-    return;
+      http.read(coffeesUri).then((jsonString) {
+      var coffeesJson = jsonDecode(jsonString);
+      tableStateNotifier.value = {
+        'status': TableStatus.ready,
+        'dataObjects': coffeesJson,
+        'columnNames': ['Nome', 'Origem', 'Variedade', 'Notas', 'Intensidade'],
+        'propertyNames': ['blend_name', 'origin', 'variety', 'notes', 'intensifier']
+      };
+    });
   }
 
   void carregarCervejas() async {
@@ -44,6 +54,25 @@ class DataService {
       };
     });
   }
+
+  void carregarNacoes() async {
+    var nationsUri = Uri(
+      scheme: 'https',
+      host: 'random-data-api.com',
+      path: 'api/nation/random_nation',
+      queryParameters: {'size': '5'}); 
+
+    http.read(nationsUri).then((jsonString) {
+      var nationsJson = jsonDecode(jsonString);
+      tableStateNotifier.value = {
+        'status': TableStatus.ready,
+        'dataObjects': nationsJson,
+        'columnNames': ['Nacionalidade', 'Idioma', 'Capital', 'Esporte Nacional'],
+        'propertyNames': ['nationality', 'language', 'capital', 'national_sport']
+      };
+    });
+  }
+
 }
 final dataService = DataService();
 

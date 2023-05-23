@@ -63,15 +63,14 @@ class DataService {
       path: 'api/nation/random_nation',
       queryParameters: {'size': '5'}); 
 
-    http.read(nationsUri).then((jsonString) {
-      var nationsJson = jsonDecode(jsonString);
-      tableStateNotifier.value = {
-        'status': TableStatus.ready,
-        'dataObjects': nationsJson,
-        'columnNames': ['Nacionalidade', 'Idioma', 'Capital', 'Esporte Nacional'],
-        'propertyNames': ['nationality', 'language', 'capital', 'national_sport']
-      };
-    });
+    var jsonString = await http.read(nationsUri);
+    var nationsJson = jsonDecode(jsonString);
+    tableStateNotifier.value = {
+      'status': TableStatus.ready,
+      'dataObjects': nationsJson,
+      'columnNames': ['Nacionalidade', 'Idioma', 'Capital', 'Esporte Nacional'],
+      'propertyNames': ['nationality', 'language', 'capital', 'national_sport']
+    };
   }
 }
 final dataService = DataService();

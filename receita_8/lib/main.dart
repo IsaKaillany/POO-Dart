@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:transparent_image/transparent_image.dart'; 
 
 enum TableStatus{idle,loading,ready,error}
 class DataService {
@@ -72,7 +73,6 @@ class DataService {
       };
     });
   }
-
 }
 final dataService = DataService();
 
@@ -85,7 +85,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(primarySwatch: Colors.deepPurple),
+      theme: ThemeData(primarySwatch: Colors.indigo),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
@@ -96,7 +96,21 @@ class MyApp extends StatelessWidget {
           builder: (_, value, __) {
             switch (value['status']){
               case TableStatus.idle: 
-                return Text("Toque algum botão");
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FadeInImage.memoryNetwork(
+                        placeholder: kTransparentImage,
+                        image: 'https://static.vecteezy.com/system/resources/previews/003/073/700/large_2x/welcome-sign-dark-blue-with-light-neon-effect-shiny-glow-eps-free-vector.jpg',
+                        width: 300,
+                      ),   
+                      SizedBox(height: 16),
+                      Text("Clique em um dos botões abaixo para visualizar informações", 
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),)
+                    ]
+                  ),
+                );
               case TableStatus.loading:
                 return CircularProgressIndicator();
               case TableStatus.ready: 
@@ -125,8 +139,8 @@ class NewNavBar extends HookWidget {
   @override
   Widget build(BuildContext context) {
     var state = useState(1);
-
     return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
       onTap: (index) {
         state.value = index;
         _itemSelectedCallback(index);

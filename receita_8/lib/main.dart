@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:transparent_image/transparent_image.dart'; 
 
-enum TableStatus{idle,loading,ready,error}
+enum TableStatus{idle, loading, ready, error}
 class DataService {
   final ValueNotifier<Map<String,dynamic>> tableStateNotifier = ValueNotifier({
     'status': TableStatus.idle,
@@ -12,7 +12,7 @@ class DataService {
   });
 
   void carregar(index) {
-    final funcoes = [carregarCafes, carregarCervejas, carregarNacoes];
+    final funcoes = [carregarCafes, carregarCervejas, carregarNacoes, carregarBlood];
     tableStateNotifier.value = {
       'status': TableStatus.loading,
       'dataObjects': []
@@ -72,6 +72,24 @@ class DataService {
       'propertyNames': ['nationality', 'language', 'capital', 'national_sport']
     };
   }
+  
+  void carregarBlood() async {
+    var bloodUri = Uri(
+      scheme: 'https',
+      host: 'random-data-api.com',
+      path: 'api/v2/blood_types',
+      queryParameters: {'size': '5'}); 
+
+    http.read(bloodUri).then((jsonString) {
+      var bloodJson = jsonDecode(jsonString);
+      tableStateNotifier.value = {
+        'status': TableStatus.ready,
+        'dataObjects': bloodJson,
+        'columnNames': ['Tipo', 'Fator RH', 'Grupo'],
+        'propertyNames': ['type', 'rh_factor', 'group']
+      };
+    });    
+  }
 }
 final dataService = DataService();
 
@@ -93,7 +111,7 @@ class MyApp extends StatelessWidget {
         body: ValueListenableBuilder(
           valueListenable: dataService.tableStateNotifier,
           builder: (_, value, __) {
-            switch (value['status']){
+            switch (value['status']) {
               case TableStatus.idle: 
                 return Center(
                   child: Column(
@@ -119,9 +137,16 @@ class MyApp extends StatelessWidget {
                   columnNames: value['columnNames']
                 );
               case TableStatus.error: 
-                return Text("Lascou");
+                return Center(
+                  child: Text(
+                    "Um erro ocorreu ao carregar os dados. Por favor verifique sua conexão de internet e tente novamente.",
+                    style: TextStyle(fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                );
+              default:
+                return Text("...");
             }
-            return Text("...");
           }
         ),
         bottomNavigationBar:
@@ -157,6 +182,10 @@ class NewNavBar extends HookWidget {
         BottomNavigationBarItem(
             label: "Nações", 
             icon: Icon(Icons.flag_outlined)
+        ),
+        BottomNavigationBarItem(
+            label: "Tipo Sanguíneo", 
+            icon: Icon(Icons.water_drop_outlined)
         )
       ]
     );

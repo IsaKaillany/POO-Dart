@@ -35,6 +35,12 @@ class DataService {
         'columnNames': ['Nome', 'Origem', 'Variedade', 'Notas', 'Intensidade'],
         'propertyNames': ['blend_name', 'origin', 'variety', 'notes', 'intensifier']
       };
+    }).catchError((error) {
+      tableStateNotifier.value = {
+        'status': TableStatus.error,
+        'dataObjects': [],
+        'columnNames': [],
+      };
     });
   }
 
@@ -53,24 +59,39 @@ class DataService {
         'columnNames': ["Nome", "Estilo", "IBU"],
         'propertyNames': ["name","style","ibu"]
       };
+    }).catchError((error) {
+      tableStateNotifier.value = {
+        'status': TableStatus.error,
+        'dataObjects': [],
+        'columnNames': [],
+      };
     });
   }
 
   void carregarNacoes() async {
-    var nationsUri = Uri(
+    try {
+      var nationsUri = Uri(
       scheme: 'https',
       host: 'random-data-api.com',
       path: 'api/nation/random_nation',
       queryParameters: {'size': '5'}); 
 
-    var jsonString = await http.read(nationsUri);
-    var nationsJson = jsonDecode(jsonString);
-    tableStateNotifier.value = {
-      'status': TableStatus.ready,
-      'dataObjects': nationsJson,
-      'columnNames': ['Nacionalidade', 'Idioma', 'Capital', 'Esporte Nacional'],
-      'propertyNames': ['nationality', 'language', 'capital', 'national_sport']
-    };
+      var jsonString = await http.read(nationsUri);
+      var nationsJson = jsonDecode(jsonString);
+      tableStateNotifier.value = {
+        'status': TableStatus.ready,
+        'dataObjects': nationsJson,
+        'columnNames': ['Nacionalidade', 'Idioma', 'Capital', 'Esporte Nacional'],
+        'propertyNames': ['nationality', 'language', 'capital', 'national_sport']
+      };
+    } 
+    catch (error) {
+      tableStateNotifier.value = {
+        'status': TableStatus.error,
+        'dataObjects': [],
+        'columnNames': [],
+      };
+    }
   }
   
   void carregarBlood() async {
@@ -88,7 +109,13 @@ class DataService {
         'columnNames': ['Tipo', 'Fator RH', 'Grupo'],
         'propertyNames': ['type', 'rh_factor', 'group']
       };
-    });    
+    }).catchError((error) {
+      tableStateNotifier.value = {
+        'status': TableStatus.error,
+        'dataObjects': [],
+        'columnNames': [],
+      };
+    });   
   }
 }
 final dataService = DataService();
@@ -138,8 +165,7 @@ class MyApp extends StatelessWidget {
                 );
               case TableStatus.error: 
                 return Center(
-                  child: Text(
-                    "Um erro ocorreu ao carregar os dados. Por favor verifique sua conexão de internet e tente novamente.",
+                  child: Text("Um erro ocorreu ao carregar os dados. Por favor verifique sua conexão de internet e tente novamente.",
                     style: TextStyle(fontSize: 16),
                     textAlign: TextAlign.center,
                   ),
@@ -184,7 +210,7 @@ class NewNavBar extends HookWidget {
             icon: Icon(Icons.flag_outlined)
         ),
         BottomNavigationBarItem(
-            label: "Tipo Sanguíneo", 
+            label: "Tipos Sanguíneo", 
             icon: Icon(Icons.water_drop_outlined)
         )
       ]

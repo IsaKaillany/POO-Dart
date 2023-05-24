@@ -177,7 +177,8 @@ class MyApp extends StatelessWidget {
         ),
         bottomNavigationBar:
           NewNavBar(itemSelectedCallback: dataService.carregar),
-      ));
+      )
+    );
   }
 }
 
@@ -218,36 +219,78 @@ class NewNavBar extends HookWidget {
   }
 }
 
-class DataTableWidget extends StatelessWidget {
-  final List jsonObjects;
+class DataTableWidget extends StatefulWidget {
+  final List<dynamic> jsonObjects;
   final List<String> columnNames;
   final List<String> propertyNames;
+  final int initialSortColumnIndex;
 
-  DataTableWidget(
-    {this.jsonObjects = const [],
-    this.columnNames = const [],
-    this.propertyNames = const []});
+  DataTableWidget({
+    required this.jsonObjects,
+    required this.columnNames,
+    required this.propertyNames,
+    this.initialSortColumnIndex = 0
+  });
+
+  @override
+  _DataTableWidgetState createState() => _DataTableWidgetState();
+}
+class _DataTableWidgetState extends State<DataTableWidget> {
+  late List<dynamic> sortedJsonObjects;
+  late List<bool> sortAscending;
+  late int currentSortColumnIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    sortedJsonObjects = widget.jsonObjects;
+    sortAscending = List<bool>.filled(widget.columnNames.length, true);
+    currentSortColumnIndex = widget.initialSortColumnIndex;
+    sortData(currentSortColumnIndex);
+  }
+
+  void sortData(int columnIndex) {
+    setState(() {
+      currentSortColumnIndex = columnIndex;
+      final int sign = sortAscending[columnIndex] ? 1 : -1;
+      sortedJsonObjects.sort((a, b) => sign * a[widget.propertyNames[columnIndex]].toString().compareTo(b[widget.propertyNames[columnIndex]].toString()));
+      sortAscending[columnIndex] = !sortAscending[columnIndex];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child: DataTable(
-        columns: columnNames.map(
-          (name) => DataColumn(
-            label: Expanded(
-              child: Text(name, style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold))
-            )
+    return Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: DataTable(
+              columns: List<DataColumn>.generate(
+                widget.columnNames.length,
+                (index) => DataColumn(
+                  label: GestureDetector(
+                    child: Text(widget.columnNames[index], style: TextStyle(fontWeight: FontWeight.bold)),
+                    onTap: () => sortData(index),
+                  ),
+                ),
+              ),
+              rows: List<DataRow>.generate(
+                sortedJsonObjects.length,
+                (index) => DataRow(
+                  cells: List<DataCell>.generate(
+                    widget.columnNames.length,
+                    (cellIndex) => DataCell(
+                      Text(sortedJsonObjects[index][widget.propertyNames[cellIndex]].toString()),
+                    ),
+                  ),
+                ),
+              ),
+            ),
           )
-        ).toList(),
-        rows: jsonObjects.map(
-          (obj) => DataRow(
-            cells: propertyNames.map(
-              (propName) => DataCell(Text(obj[propName] ?? ''))
-            ).toList()
-          )
-        ).toList()
+        ],
       )
-    ); 
+    );
   }
 }

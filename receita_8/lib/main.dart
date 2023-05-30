@@ -211,7 +211,7 @@ class NewNavBar extends HookWidget {
             icon: Icon(Icons.flag_outlined)
         ),
         BottomNavigationBarItem(
-            label: "Tipos Sanguíneo", 
+            label: "Tipos Sanguíneos", 
             icon: Icon(Icons.water_drop_outlined)
         )
       ]

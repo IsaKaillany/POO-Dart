@@ -5,90 +5,148 @@ import 'dart:convert';
 import 'package:transparent_image/transparent_image.dart'; 
 
 enum TableStatus{idle, loading, ready, error}
+enum ItemType{beer, coffee, nation, none}
+
 class DataService {
-  final ValueNotifier<Map<String,dynamic>> tableStateNotifier = ValueNotifier({
+  final ValueNotifier<Map<String, dynamic>> tableStateNotifier =
+      ValueNotifier({
     'status': TableStatus.idle,
-    'dataObjects': []
+    'dataObjects': [],
+    'itemType': ItemType.none,
   });
 
-  void carregar(index) {
+  void carregar(int index) {
     final funcoes = [carregarCafes, carregarCervejas, carregarNacoes];
-    tableStateNotifier.value = {
-      'status': TableStatus.loading,
-      'dataObjects': []
-    };
     funcoes[index]();
   }
 
   void carregarCafes() async {
-    var coffeesUri = Uri(
-      scheme: 'https',
-      host: 'random-data-api.com',
-      path: 'api/coffee/random_coffee',
-      queryParameters: {'size': '10'}); 
+    if (tableStateNotifier.value['status'] == TableStatus.loading) {
+      return;
+    }
 
-      http.read(coffeesUri).then((jsonString) {
-      var coffeesJson = jsonDecode(jsonString);
+    if (tableStateNotifier.value['itemType'] != ItemType.coffee) {
       tableStateNotifier.value = {
-        'status': TableStatus.ready,
-        'dataObjects': coffeesJson,
-        'propertyNames': ['blend_name', 'origin', 'variety']
+        'status': TableStatus.loading,
+        'dataObjects': [],
+        'itemType': ItemType.coffee,
       };
-    }).catchError((error) {
+    }
+
+    try {
+      final coffeesUri = Uri(
+        scheme: 'https',
+        host: 'random-data-api.com',
+        path: 'api/coffee/random_coffee',
+        queryParameters: {'size': '10'},
+      );
+
+      final jsonString = await http.read(coffeesUri);
+      final coffeesJson = jsonDecode(jsonString);
+
+      final updatedDataObjects = tableStateNotifier.value['status'] != TableStatus.loading
+          ? [...tableStateNotifier.value['dataObjects'], ...coffeesJson]
+          : coffeesJson;
+
+      tableStateNotifier.value = {
+        'itemType': ItemType.coffee,
+        'status': TableStatus.ready,
+        'dataObjects': updatedDataObjects,
+        'propertyNames': ['blend_name', 'origin', 'variety'],
+      };
+    } catch (error) {
       tableStateNotifier.value = {
         'status': TableStatus.error,
         'dataObjects': [],
       };
-    });
+    }
   }
 
   void carregarNacoes() async {
-    try {
-      var nationsUri = Uri(
-      scheme: 'https',
-      host: 'random-data-api.com',
-      path: 'api/nation/random_nation',
-      queryParameters: {'size': '10'}); 
+    if (tableStateNotifier.value['status'] == TableStatus.loading) {
+      return;
+    }
 
-      var jsonString = await http.read(nationsUri);
-      var nationsJson = jsonDecode(jsonString);
+    if (tableStateNotifier.value['itemType'] != ItemType.nation) {
       tableStateNotifier.value = {
-        'status': TableStatus.ready,
-        'dataObjects': nationsJson,
-        'propertyNames': ['nationality', 'language', 'capital', 'national_sport']
+        'status': TableStatus.loading,
+        'dataObjects': [],
+        'itemType': ItemType.nation,
       };
-    } 
-    catch (error) {
+    }
+
+    try {
+      final nationsUri = Uri(
+        scheme: 'https',
+        host: 'random-data-api.com',
+        path: 'api/nation/random_nation',
+        queryParameters: {'size': '10'},
+      );
+
+      final jsonString = await http.read(nationsUri);
+      final nationsJson = jsonDecode(jsonString);
+
+      final updatedDataObjects = tableStateNotifier.value['status'] != TableStatus.loading
+          ? [...tableStateNotifier.value['dataObjects'], ...nationsJson]
+          : nationsJson;
+
+      tableStateNotifier.value = {
+        'itemType': ItemType.nation,
+        'status': TableStatus.ready,
+        'dataObjects': updatedDataObjects,
+        'propertyNames': ['nationality', 'language', 'capital', 'national_sport'],
+      };
+    } catch (error) {
       tableStateNotifier.value = {
         'status': TableStatus.error,
         'dataObjects': [],
-        'columnNames': [],
       };
     }
   }
 
   void carregarCervejas() async {
-    var beersUri = Uri(
-      scheme: 'https',
-      host: 'random-data-api.com',
-      path: 'api/beer/random_beer',
-      queryParameters: {'size': '10'});
+    if (tableStateNotifier.value['status'] == TableStatus.loading) {
+      return;
+    }
 
-    http.read(beersUri).then((jsonString) {
-      var beersJson = jsonDecode(jsonString);
+    if (tableStateNotifier.value['itemType'] != ItemType.beer) {
       tableStateNotifier.value = {
-        'status': TableStatus.ready,
-        'dataObjects': beersJson,
-        'propertyNames': ["name","style","ibu"]
+        'status': TableStatus.loading,
+        'dataObjects': [],
+        'itemType': ItemType.beer,
       };
-    }).catchError((error) {
+    }
+
+    try {
+      final beersUri = Uri(
+        scheme: 'https',
+        host: 'random-data-api.com',
+        path: 'api/beer/random_beer',
+        queryParameters: {'size': '10'},
+      );
+
+      final jsonString = await http.read(beersUri);
+      final beersJson = jsonDecode(jsonString);
+
+      final updatedDataObjects = tableStateNotifier.value['status'] != TableStatus.loading
+          ? [...tableStateNotifier.value['dataObjects'], ...beersJson]
+          : beersJson;
+
+      tableStateNotifier.value = {
+        'itemType': ItemType.beer,
+        'status': TableStatus.ready,
+        'dataObjects': updatedDataObjects,
+        'propertyNames': ['name', 'style', 'ibu'],
+      };
+    } catch (error) {
       tableStateNotifier.value = {
         'status': TableStatus.error,
         'dataObjects': [],
       };
-    });
+    }
   }
 }
+
 final dataService = DataService();
 
 void main() {
@@ -97,6 +155,12 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  final functionsMap = {
+    ItemType.beer: dataService.carregarCervejas,
+    ItemType.coffee: dataService.carregarCafes,
+    ItemType.nation: dataService.carregarNacoes
+  };
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -104,7 +168,13 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: const Text("Dicas"),
+          title: ValueListenableBuilder(
+            valueListenable: dataService.tableStateNotifier,
+            builder: (_, value, __) {
+              int itemCount = value['dataObjects'].length;
+              return Text('Itens Exibidos: $itemCount');
+            },
+          ),
         ),
         body: ValueListenableBuilder(
           valueListenable: dataService.tableStateNotifier,
@@ -133,7 +203,9 @@ class MyApp extends StatelessWidget {
               case TableStatus.ready:
                 return ListWidget(
                   jsonObjects: value['dataObjects'],
-                  propertyNames: value['propertyNames']);
+                  propertyNames: value['propertyNames'],
+                  scrollEndedCallback: functionsMap[value['itemType']],
+                );
 
               case TableStatus.error:
                 return Center(
@@ -187,17 +259,40 @@ class NewNavBar extends HookWidget {
   }
 }
 
-class ListWidget extends StatelessWidget {
+class ListWidget extends HookWidget {
+  final dynamic _scrollEndedCallback;
   final List jsonObjects;
   final List<String> propertyNames;
 
   ListWidget(
       {this.jsonObjects = const [],
-      this.propertyNames = const []});
+      this.propertyNames = const [], 
+      void Function() 
+        ? scrollEndedCallback })
+        : _scrollEndedCallback = scrollEndedCallback ?? false;
 
   @override
   Widget build(BuildContext context) {
+    var controller = useScrollController();
+    useEffect(
+      (){
+        //Código chamado após a primeira renderização do componente
+        controller.addListener(
+          (){
+            if (controller.position.pixels == controller.position.maxScrollExtent)
+            {
+              if (_scrollEndedCallback is Function)
+              {
+                _scrollEndedCallback();
+              }
+            }
+          }
+        );
+      },[controller]
+    );
+
     return ListView.separated(
+      controller: controller,
       padding: EdgeInsets.all(10),
       separatorBuilder: (_, __) => Divider(
         height: 5,
@@ -206,8 +301,11 @@ class ListWidget extends StatelessWidget {
         endIndent: 10,
         color: Theme.of(context).primaryColor,
       ),
-      itemCount: jsonObjects.length,
+      itemCount: jsonObjects.length+1,
       itemBuilder: (_, index) {
+        if (index==jsonObjects.length)
+          return Center(child: LinearProgressIndicator());
+        
         var title = jsonObjects[index][propertyNames[0]];
         var content = propertyNames
             .sublist(1)

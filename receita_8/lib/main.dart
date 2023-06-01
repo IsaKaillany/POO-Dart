@@ -203,16 +203,16 @@ class NewNavBar extends HookWidget {
           icon: Icon(Icons.coffee_outlined),
         ),
         BottomNavigationBarItem(
-            label: "Cervejas", 
-            icon: Icon(Icons.local_drink_outlined)
+          label: "Cervejas", 
+          icon: Icon(Icons.local_drink_outlined)
         ),
         BottomNavigationBarItem(
-            label: "Nações", 
-            icon: Icon(Icons.flag_outlined)
+          label: "Nações", 
+          icon: Icon(Icons.flag_outlined)
         ),
         BottomNavigationBarItem(
-            label: "Tipos Sanguíneo", 
-            icon: Icon(Icons.water_drop_outlined)
+          label: "Tipos Sanguíneos", 
+          icon: Icon(Icons.water_drop_outlined)
         )
       ]
     );

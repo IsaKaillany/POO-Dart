@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter/gestures.dart';
 import '../data/data_service.dart';
 
+class MyCustomScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {PointerDeviceKind.touch, PointerDeviceKind.mouse};
+}
+
+class Options {
+  static const List<int> options = [3, 5, 7];
+}
+
 class MyApp extends StatelessWidget {
+  final loadOptions = Options.options;
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scrollBehavior: MyCustomScrollBehavior(),
       theme: ThemeData(primarySwatch: Colors.deepPurple),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -13,7 +26,7 @@ class MyApp extends StatelessWidget {
           title: const Text("Dicas"),
           actions:[
             PopupMenuButton(
-              itemBuilder: (_) => [3,7,15].map(
+              itemBuilder: (_) => loadOptions.map(
                 (num) => PopupMenuItem(
                   value: num,
                   child: Text("Carregar $num itens por vez"),

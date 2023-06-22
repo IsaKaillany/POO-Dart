@@ -49,39 +49,28 @@ class DataService {
     Ordenador ord = Ordenador();
 
     var objetosOrdenados = [];
+
     final type = tableStateNotifier.value['itemType'];
+    List<String> propriedadesAtuais = [];
 
-    if (type == ItemType.beer && propriedade == "name") {
-      objetosOrdenados = ord.ordenarCervejasPorNomeCrescente(objetos);
+    if (type == ItemType.beer) {
+      propriedadesAtuais = ItemType.beer.properties;
     }
-    else if (type == ItemType.beer && propriedade == "style") {
-      objetosOrdenados = ord.ordenarCervejasPorEstiloCrescente(objetos);
+    else if (type == ItemType.coffee) {
+      propriedadesAtuais = ItemType.coffee.properties;
     }
-    else if (type == ItemType.beer && propriedade == "ibu") {
-      objetosOrdenados = ord.ordenarCervejasPorIBUCrescente(objetos);
+    else if (type == ItemType.nation) {
+      propriedadesAtuais = ItemType.nation.properties;
+    }
+    else {
+      return;
     }
 
-    else if (type == ItemType.coffee && propriedade == "blend_name") {
-      objetosOrdenados = ord.ordenarCafesPorNomeCrescente(objetos);
-    }
-    else if (type == ItemType.coffee && propriedade == "origin") {
-      objetosOrdenados = ord.ordenarCafesPorOrigemCrescente(objetos);
-    }
-    else if (type == ItemType.coffee && propriedade == "variety") {
-      objetosOrdenados = ord.ordenarCafesPorTipoCrescente(objetos);
-    }
-    
-    else if (type == ItemType.nation && propriedade == "nationality") {
-      objetosOrdenados = ord.ordenarNacoesPorNomeCrescente(objetos);
-    }
-    else if (type == ItemType.nation && propriedade == "capital") {
-      objetosOrdenados = ord.ordenarNacoesPorCapitalCrescente(objetos);
-    }
-    else if (type == ItemType.nation && propriedade == "language") {
-      objetosOrdenados = ord.ordenarNacoesPorIdiomaCrescente(objetos);
-    }
-    else if (type == ItemType.nation && propriedade == "national_sport") {
-      objetosOrdenados = ord.ordenarNacoesPorEsporteCrescente(objetos);
+    for (int i = 0; i < propriedadesAtuais.length; i++) {
+      if (propriedade == propriedadesAtuais[i]) {
+        objetosOrdenados = ord.ordernar(objetos, propriedade, true);
+        break;
+      }
     }
   
     emitirEstadoOrdenado(objetosOrdenados, propriedade);

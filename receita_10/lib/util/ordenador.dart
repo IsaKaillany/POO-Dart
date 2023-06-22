@@ -1,7 +1,8 @@
 class Ordenador {
 
-  List ordernar(List objetos, String propriedade, bool trocouAoMenosUm) {
+  List ordenar(List objetos, String propriedade) {
     List objetosOrdenados = List.of(objetos);
+    bool trocouAoMenosUm;
 
     do {
       trocouAoMenosUm = false;

@@ -41,37 +41,16 @@ class DataService {
   }
 
   void ordenarEstadoAtual(String propriedade) {
+
     List objetos = tableStateNotifier.value['dataObjects'] ?? [];
 
-    if (objetos == []) {
-      return;
-    }
+    if (objetos == []) return;
+
     Ordenador ord = Ordenador();
 
     var objetosOrdenados = [];
 
-    final type = tableStateNotifier.value['itemType'];
-    List<String> propriedadesAtuais = [];
-
-    if (type == ItemType.beer) {
-      propriedadesAtuais = ItemType.beer.properties;
-    }
-    else if (type == ItemType.coffee) {
-      propriedadesAtuais = ItemType.coffee.properties;
-    }
-    else if (type == ItemType.nation) {
-      propriedadesAtuais = ItemType.nation.properties;
-    }
-    else {
-      return;
-    }
-
-    for (int i = 0; i < propriedadesAtuais.length; i++) {
-      if (propriedade == propriedadesAtuais[i]) {
-        objetosOrdenados = ord.ordernar(objetos, propriedade, true);
-        break;
-      }
-    }
+    objetosOrdenados = ord.ordenar(objetos, propriedade);
   
     emitirEstadoOrdenado(objetosOrdenados, propriedade);
   }

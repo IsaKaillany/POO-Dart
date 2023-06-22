@@ -50,7 +50,7 @@ class DataService {
 
     var objetosOrdenados = [];
 
-    objetosOrdenados = ord.ordenar(objetos, propriedade);
+    objetosOrdenados = ord.ordenarItens(objetos, DecididorJson(propriedade));
   
     emitirEstadoOrdenado(objetosOrdenados, propriedade);
   }
@@ -119,6 +119,20 @@ class DataService {
     var json = await acessarApi(uri);
 
     emitirEstadoPronto(type, json);
+  }
+}
+
+class DecididorJson extends Decididor{
+  final String propriedade;
+  DecididorJson(this.propriedade);
+
+  @override
+  bool precisaTrocarAtualPeloProximo(atual, proximo) {
+    try {
+      return atual[propriedade].compareTo(proximo[propriedade]) > 0;
+    } catch (error){
+      return false;
+    }    
   }
 }
 

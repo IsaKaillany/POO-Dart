@@ -1,25 +1,27 @@
+abstract class Decididor {
+  bool precisaTrocarAtualPeloProximo(dynamic atual, dynamic proximo);
+}
+
 class Ordenador {
 
-  List ordenar(List objetos, String propriedade) {
+  List ordenarItens(List objetos, Decididor decididor){
     List objetosOrdenados = List.of(objetos);
     bool trocouAoMenosUm;
 
-    do {
+    do{
       trocouAoMenosUm = false;
-
-      for (int i = 0; i < objetosOrdenados.length - 1; i++) {
+      for (int i=0; i<objetosOrdenados.length-1; i++){
         var atual = objetosOrdenados[i];
-        var proximo = objetosOrdenados[i + 1];
+        var proximo = objetosOrdenados[i+1];
 
-        if (atual[propriedade].compareTo(proximo[propriedade]) > 0) {
+        if (decididor.precisaTrocarAtualPeloProximo(atual,proximo)){
           var aux = objetosOrdenados[i];
-          objetosOrdenados[i] = objetosOrdenados[i + 1];
-          objetosOrdenados[i + 1] = aux;
+          objetosOrdenados[i] = objetosOrdenados[i+1];
+          objetosOrdenados[i+1] = aux;
           trocouAoMenosUm = true;
         }
       }
-    } while (trocouAoMenosUm);
-
+    }while(trocouAoMenosUm);
     return objetosOrdenados;
-  }
+  }  
 }

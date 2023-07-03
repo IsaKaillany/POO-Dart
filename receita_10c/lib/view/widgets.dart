@@ -86,13 +86,13 @@ class NewNavBar extends HookWidget {
         currentIndex: state.value,
         items: const [
           BottomNavigationBarItem(
-            label: "Cafés",
-            icon: Icon(Icons.coffee_outlined),
+            label: "Eletrodomésticos",
+            icon: Icon(Icons.kitchen_outlined),
           ),
           BottomNavigationBarItem(
-              label: "Cervejas", icon: Icon(Icons.local_drink_outlined)),
+              label: "Endereços", icon: Icon(Icons.house_outlined)),
           BottomNavigationBarItem(
-              label: "Nações", icon: Icon(Icons.flag_outlined))
+              label: "Usuários", icon: Icon(Icons.person_2_outlined))
         ]);
   }
 }
@@ -109,20 +109,21 @@ class DataTableWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DataTable(
-      columns: columnNames
-        .map((name) => DataColumn(
-          onSort: (columnIndex, ascending) => 
-            dataService.ordenarEstadoAtual(propertyNames[columnIndex]),
-          label: Expanded(
-            child: Text(name,
-              style: TextStyle(fontStyle: FontStyle.italic)))))
-        .toList(),
-      rows: jsonObjects
-        .map((obj) => DataRow(
-          cells: propertyNames
-            .map((propName) => DataCell(Text(obj[propName])))
-            .toList()))
-        .toList());
+    return Center(
+      child: DataTable(
+        columns: columnNames
+          .map((name) => DataColumn(
+            onSort: (columnIndex, ascending) => 
+              dataService.ordenarEstadoAtual(propertyNames[columnIndex]),
+            label: Expanded(
+              child: Text(name,
+                style: TextStyle(fontStyle: FontStyle.italic)))))
+          .toList(),
+        rows: jsonObjects
+          .map((obj) => DataRow(
+            cells: propertyNames
+              .map((propName) => DataCell(Text(obj[propName])))
+              .toList()))
+          .toList()));
   }
 }

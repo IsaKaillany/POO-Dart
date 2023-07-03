@@ -1,6 +1,6 @@
 class Ordenador {
 
-  List ordenar(List objetos, String propriedade) {
+  List ordenar(List objetos, bool Function(dynamic, dynamic, bool) callback, bool crescente) {
     List objetosOrdenados = List.of(objetos);
     bool trocouAoMenosUm;
 
@@ -11,7 +11,7 @@ class Ordenador {
         var atual = objetosOrdenados[i];
         var proximo = objetosOrdenados[i + 1];
 
-        if (atual[propriedade].compareTo(proximo[propriedade]) > 0) {
+        if (callback(atual, proximo, crescente)) {
           var aux = objetosOrdenados[i];
           objetosOrdenados[i] = objetosOrdenados[i + 1];
           objetosOrdenados[i + 1] = aux;

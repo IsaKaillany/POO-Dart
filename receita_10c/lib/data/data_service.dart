@@ -2,20 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../util/ordenador.dart';
+import '../util/decididor.dart';
 
 enum TableStatus { idle, loading, ready, error }
 enum ItemType{
-  beer, coffee, nation, none;
+  appliances, addresses, users, none;
   String get asString => '$name';
 
-  List<String> get columns => this == coffee? ["Nome", "Origem", "Tipo"] :
-                              this == beer? ["Nome", "Estilo", "IBU"]:
-                              this == nation? ["Nome", "Capital", "Idioma","Esporte"]:
+  List<String> get columns => this == addresses? ["Cidade", "Rua", "Endereço"] :
+                              this == appliances? ["Marca", "Equipamento"]:
+                              this == users? ["Nome", "Sobrenome", "Username"]:
                               [] ;
 
-  List<String> get properties => this == coffee? ["blend_name","origin","variety"] :
-                              this == beer? ["name","style","ibu"]:
-                              this == nation? ["nationality","capital","language","national_sport"]:
+  List<String> get properties => this == addresses? ["city","street_name","street_address"] :
+                              this == appliances? ["brand","equipment"]:
+                              this == users? ["first_name","last_name","username"]:
                               [] ;
 }
 
@@ -36,7 +37,7 @@ class DataService {
   });
 
   void carregar(index) {
-    final params = [ItemType.coffee, ItemType.beer, ItemType.nation];
+    final params = [ItemType.addresses, ItemType.appliances, ItemType.users];
     carregarPorTipo(params[index]);
   }
 
@@ -44,13 +45,14 @@ class DataService {
 
     List objetos = tableStateNotifier.value['dataObjects'] ?? [];
 
-    if (objetos == []) return;
+    if (objetos.isEmpty) return;
 
     Ordenador ord = Ordenador();
 
     var objetosOrdenados = [];
+    bool crescente = true;
 
-    objetosOrdenados = ord.ordenar(objetos, propriedade);
+    objetosOrdenados = ord.ordenar(objetos, DecididorJson(propriedade, crescente).precisaTrocar, crescente);
   
     emitirEstadoOrdenado(objetosOrdenados, propriedade);
   }
@@ -59,7 +61,7 @@ class DataService {
     return Uri(
       scheme: 'https',
       host: 'random-data-api.com',
-      path: 'api/${type.asString}/random_${type.asString}',
+      path: 'api/v2/${type.asString}',
       queryParameters: {'size': '$_numberOfItems'});
   }
 
@@ -123,3 +125,21 @@ class DataService {
 }
 
 final dataService = DataService();
+
+
+class DecididorJson implements Decididor {
+  final String prop;
+  final bool crescente;
+
+  DecididorJson(this.prop, [this.crescente = true]);
+
+  @override
+  bool precisaTrocar(dynamic atual, dynamic proximo, bool crescente) {
+    try {
+      final ordemCorreta = crescente ? [atual, proximo] : [proximo, atual];
+      return ordemCorreta[0][prop].compareTo(ordemCorreta[1][prop]) > 0;
+    } catch (error) {
+      return false;
+    }
+  }
+}

@@ -33,8 +33,11 @@ class DataService {
   final ValueNotifier<Map<String, dynamic>> tableStateNotifier = ValueNotifier({
     'status': TableStatus.idle,
     'dataObjects': [],
-    'itemType': ItemType.none
+    'itemType': ItemType.none,
+    'lastSortedProp': null,
+    'isAscending': true,
   });
+
 
   void carregar(index) {
     final params = [ItemType.addresses, ItemType.appliances, ItemType.users];
@@ -42,20 +45,25 @@ class DataService {
   }
 
   void ordenarEstadoAtual(String propriedade) {
+  List objetos = tableStateNotifier.value['dataObjects'] ?? [];
 
-    List objetos = tableStateNotifier.value['dataObjects'] ?? [];
+  if (objetos.isEmpty) return;
 
-    if (objetos.isEmpty) return;
+  Ordenador ord = Ordenador();
 
-    Ordenador ord = Ordenador();
+  var objetosOrdenados = [];
 
-    var objetosOrdenados = [];
-    bool crescente = true;
+  // Verifica se a coluna já está ordenada de forma crescente
+  bool crescente = propriedade == tableStateNotifier.value['lastSortedProp'] ? !tableStateNotifier.value['isAscending'] : true;
 
-    objetosOrdenados = ord.ordenar(objetos, DecididorJson(propriedade, crescente).precisaTrocar, crescente);
-  
-    emitirEstadoOrdenado(objetosOrdenados, propriedade);
-  }
+  objetosOrdenados = ord.ordenar(objetos, DecididorJson(propriedade, crescente).precisaTrocar, crescente);
+
+  // Atualiza o estado com a nova ordenação
+  tableStateNotifier.value['lastSortedProp'] = propriedade;
+  tableStateNotifier.value['isAscending'] = crescente;
+
+  emitirEstadoOrdenado(objetosOrdenados, propriedade);
+}
 
   Uri montarUri(ItemType type) {
     return Uri(

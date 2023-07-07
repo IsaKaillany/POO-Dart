@@ -4,6 +4,8 @@ import 'dart:convert';
 import '../util/ordenador.dart';
 import '../util/decididor.dart';
 
+var valores = [3, 7, 15]; 
+
 enum TableStatus { idle, loading, ready, error }
 enum ItemType{
   appliances, addresses, users, none;
@@ -21,9 +23,10 @@ enum ItemType{
 }
 
 class DataService {
-  static const MAX_N_ITEMS = 15;
-  static const MIN_N_ITEMS = 3;
-  static const DEFAULT_N_ITEMS = 7;
+  static int get MAX_N_ITEMS => valores[2];
+  static int get MIN_N_ITEMS => valores[0];
+  static int get DEFAULT_N_ITEMS => valores[1];
+
   int _numberOfItems = DEFAULT_N_ITEMS;
 
   set numberOfItems(n){

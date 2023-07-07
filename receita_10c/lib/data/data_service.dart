@@ -34,8 +34,6 @@ class DataService {
     'status': TableStatus.idle,
     'dataObjects': [],
     'itemType': ItemType.none,
-    'lastSortedProp': null,
-    'isAscending': true,
   });
 
 
@@ -52,15 +50,9 @@ class DataService {
   Ordenador ord = Ordenador();
 
   var objetosOrdenados = [];
-
-  // Verifica se a coluna já está ordenada de forma crescente
-  bool crescente = propriedade == tableStateNotifier.value['lastSortedProp'] ? !tableStateNotifier.value['isAscending'] : true;
+  bool crescente = true;
 
   objetosOrdenados = ord.ordenar(objetos, DecididorJson(propriedade, crescente).precisaTrocar, crescente);
-
-  // Atualiza o estado com a nova ordenação
-  tableStateNotifier.value['lastSortedProp'] = propriedade;
-  tableStateNotifier.value['isAscending'] = crescente;
 
   emitirEstadoOrdenado(objetosOrdenados, propriedade);
 }

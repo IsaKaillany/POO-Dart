@@ -86,18 +86,18 @@ class NewNavBar extends HookWidget {
         currentIndex: state.value,
         items: const [
           BottomNavigationBarItem(
+            label: "Endereços", icon: Icon(Icons.house_outlined)),
+          BottomNavigationBarItem(
             label: "Eletrodomésticos",
             icon: Icon(Icons.kitchen_outlined),
           ),
-          BottomNavigationBarItem(
-              label: "Endereços", icon: Icon(Icons.house_outlined)),
           BottomNavigationBarItem(
               label: "Usuários", icon: Icon(Icons.person_2_outlined))
         ]);
   }
 }
 
-class DataTableWidget extends StatelessWidget {
+class DataTableWidget extends HookWidget {
   final List jsonObjects;
   final List<String> columnNames;
   final List<String> propertyNames;
@@ -109,12 +109,22 @@ class DataTableWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final sortAscending = useState(true);
+    final sortColumnIndex = useState(0);
+
     return Center(
       child: DataTable(
+        sortAscending: sortAscending.value,
+        sortColumnIndex: sortColumnIndex.value,
+        
         columns: columnNames
           .map((name) => DataColumn(
-            onSort: (columnIndex, ascending) => 
-              dataService.ordenarEstadoAtual(propertyNames[columnIndex]),
+            onSort: (columnIndex, ascending) {
+              sortColumnIndex.value = columnIndex;
+              sortAscending.value = !sortAscending.value;
+
+              dataService.ordenarEstadoAtual(propertyNames[columnIndex], sortAscending.value);
+            },
             label: Expanded(
               child: Text(name,
                 style: TextStyle(fontStyle: FontStyle.italic)))))

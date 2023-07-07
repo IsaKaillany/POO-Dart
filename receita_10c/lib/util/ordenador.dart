@@ -1,6 +1,6 @@
 class Ordenador {
-
-  List ordenar(List objetos, bool Function(dynamic, dynamic, bool) callback, bool crescente) {
+  List ordenar(List objetos, bool Function(dynamic, dynamic, bool) callback,
+      bool crescente) {
     List objetosOrdenados = List.of(objetos);
     bool trocouAoMenosUm;
 
@@ -21,5 +21,28 @@ class Ordenador {
     } while (trocouAoMenosUm);
 
     return objetosOrdenados;
+  }
+
+  List ordenar2(List item, Function funcaoCall) {
+    List itemOrdenadas = List.of(item);
+    bool trocouAoMenosUm;
+    final funcao = funcaoCall;
+
+    do {
+      trocouAoMenosUm = false;
+      for (int i = 0; i < itemOrdenadas.length - 1; i++) {
+        var atual = itemOrdenadas[i];
+        var proximo = itemOrdenadas[i + 1];
+
+        if (funcao(atual, proximo)) {
+          var aux = itemOrdenadas[i];
+          itemOrdenadas[i] = itemOrdenadas[i + 1];
+          itemOrdenadas[i + 1] = aux;
+          trocouAoMenosUm = true;
+        }
+      }
+    } while (trocouAoMenosUm);
+
+    return itemOrdenadas;
   }
 }

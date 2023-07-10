@@ -22,9 +22,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.deepPurple),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: const PreferredSize(
+        appBar: PreferredSize(
           preferredSize: Size.fromHeight(kToolbarHeight),
-          child: MyAppBar(),
+          child: MyAppBar(callback: dataService.filtrarEstadoAtual),
         ),
         body: ValueListenableBuilder(
           valueListenable: dataService.tableStateNotifier,
@@ -127,7 +127,9 @@ class DataTableWidget extends HookWidget {
 }
 
 class MyAppBar extends HookWidget {
-  const MyAppBar({Key? key}) : super(key: key);
+  final _callback;
+
+  MyAppBar({callback}): _callback = callback ?? (int){}
 
   @override
   Widget build(BuildContext context) {
@@ -145,14 +147,7 @@ class MyAppBar extends HookWidget {
             minWidth: 1.0,
             maxWidth: 280.0,
           ),
-          onChanged: (filter) {
-            if (filter.length >= 3) {
-              dataService.filtrarEstadoAtual(filter);
-            }
-            else {
-              dataService.filtrarEstadoAtual('');
-            }
-          },
+           onChanged: (value) {_callback(value);},
         ),
         PopupMenuButton(
           initialValue: state.value,

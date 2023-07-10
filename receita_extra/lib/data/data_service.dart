@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import '../util/ordenador.dart';
 import '../util/decididor.dart';
-import '../util/filtro.dart';
 
 var valores = [3, 7, 15]; 
 
@@ -29,6 +27,7 @@ class DataService {
   static int get DEFAULT_N_ITEMS => valores[1];
 
   int _numberOfItems = DEFAULT_N_ITEMS;
+  var objetoOriginal = [];
 
   set numberOfItems(n){
     _numberOfItems = n < 0 ? MIN_N_ITEMS: n > MAX_N_ITEMS? MAX_N_ITEMS: n;
@@ -51,9 +50,7 @@ class DataService {
 
     if (objetos.isEmpty) return;
 
-    Ordenador ord = Ordenador();
-
-    var objetosOrdenados = [];
+    var objetosOrdenados = objetos;
     bool crescente = cresc;
 
     bool precisaTrocar(atual, proximo) {
@@ -61,26 +58,37 @@ class DataService {
       return ordemCorreta[0][propriedade].compareTo(ordemCorreta[1][propriedade]) > 0;
     }
 
-    // objetosOrdenados = ord.ordenar(objetos, DecididorJson(propriedade, crescente).precisaTrocar, crescente);
-    objetosOrdenados = ord.ordenar2(objetos, precisaTrocar);
+  objetosOrdenados.sort((a, b) {  
+    if (precisaTrocar(a, b)) {
+      return 1; 
+    } 
+    else if (precisaTrocar(b, a)) {
+      return -1; 
+    } 
+    else {
+      return 0; 
+    }
+  });
 
     emitirEstadoOrdenado(objetosOrdenados, propriedade);
   }
 
-  void filtrarEstadoAtual(final String filtro) {
-    List objetos = tableStateNotifier.value['previousObjects'] ?? [];
+  void filtrarEstadoAtual(String filtro) {
+    List objetos = objetoOriginal;
     
     if (objetos == []) return;
 
-    List propriedades = tableStateNotifier.value['propertyNames'];
+    List objetosFiltrados = objetoOriginal;
 
-    Filtrador fil = Filtrador();
+    if (filtro != '') {
+      objetosFiltrados = objetos.where((objeto) =>
+      objeto.toString().toLowerCase().contains(filtro.toLowerCase())).toList();
+    }
+    else {
+      objetosFiltrados = objetoOriginal;
+    }
 
-    DecididorFiltro d = DecididorFiltroJSON(propriedades);
-
-    var objetosFiltrados = fil.filtrar(objetos, filtro, d.dentroDoFiltro);
-
-    emitirEstadoFiltrado(objetos, objetosFiltrados, filtro);
+    emitirEstadoFiltrado(objetosFiltrados);
   }
 
 
@@ -101,11 +109,9 @@ class DataService {
     return json;
   }
 
-  void emitirEstadoFiltrado(List objetosOriginais, List objetosFiltrados, String filtro) {
+  void emitirEstadoFiltrado(List objetosFiltrados) {
     var estado = Map<String, dynamic>.from(tableStateNotifier.value);
-    estado['previousObjects'] = objetosOriginais;
     estado['dataObjects'] = objetosFiltrados;
-    estado['filterCriteria'] = filtro;
     tableStateNotifier.value = estado;
   }
 
@@ -123,7 +129,6 @@ class DataService {
       'status': TableStatus.loading,
       'dataObjects': [],
       'itemType': type,
-      'previousObjects': []
     };
   }
 
@@ -134,8 +139,8 @@ class DataService {
       'dataObjects': json,
       'propertyNames': type.properties,
       'columnNames': type.columns,
-      'previousObjects': json
     };
+    objetoOriginal = json;
   }
 
   bool temRequisicaoEmCurso() =>
@@ -178,21 +183,5 @@ class DecididorJson implements Decididor {
     } catch (error) {
       return false;
     }
-  }
-}
-
-class DecididorFiltroJSON extends DecididorFiltro {
-  final List propriedades;
-
-  DecididorFiltroJSON(this.propriedades);
-
-  @override
-  bool dentroDoFiltro(objeto, filtro) {
-    bool achouAoMenosUm = false;
-    for (int i=0; i<propriedades.length-1; i++) {
-      achouAoMenosUm = objeto[propriedades[i]].contains(filtro) ? true : false;
-      if (achouAoMenosUm) break;
-    }
-    return achouAoMenosUm;
   }
 }
